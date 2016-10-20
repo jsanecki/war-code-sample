@@ -5,22 +5,27 @@ package com.sanecki.war.sets;
  */
 public class Card {
 
-    Suit suit;
-    Face face;
+    int rank;
 
-    public Suit getSuit() {
-        return suit;
+    public Card(int rank) {
+        this.rank = rank;
     }
 
-    public void setSuit(Suit suit) {
-        this.suit = suit;
+    public int getRank() {
+        return rank;
     }
 
-    public Face getFace() {
-        return face;
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 
-    public void setFace(Face face) {
-        this.face = face;
+    @Override
+    public boolean equals(Object obj) {
+        return ((Card)obj).getRank() == this.getRank();
+    }
+
+    @Override
+    public String toString() {
+        return "Card of Rank " + rank;
     }
 }

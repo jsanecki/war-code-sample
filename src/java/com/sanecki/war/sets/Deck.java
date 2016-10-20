@@ -9,5 +9,5 @@ public interface Deck {
 
     void shuffle();
 
-    Card deal();
+    Card deal() throws EmptyDeckException;
 }
