@@ -7,9 +7,11 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
@@ -21,7 +23,7 @@ public class WarTest {
         Deck deck = new DeckImpl();
         deck.create(4, 10);
 
-        List<List<Card>> hands = war.constructHands(deck, 2);
+        List<List<Card>> hands = war.constructPlayerHands(deck, 2);
         assertThat(hands.size(), is(equalTo(2)));
         List<Card> playOneHand = hands.get(0);
         assertThat(playOneHand.size(), is(equalTo(20)));
@@ -34,7 +36,7 @@ public class WarTest {
         Deck deck = new DeckImpl();
         deck.create(4, 10);
 
-        List<List<Card>> hands = war.constructHands(deck, 3);
+        List<List<Card>> hands = war.constructPlayerHands(deck, 3);
         assertThat(hands.size(), is(equalTo(3)));
         List<Card> playerOneHand = hands.get(0);
         assertThat(playerOneHand.size(), is(equalTo(14)));
@@ -49,10 +51,10 @@ public class WarTest {
         players.add(buildPlayer(5));
 
         War war = new War();
-        war.war(players, new ArrayList<>());
+        war.playCards(players, new ArrayList<>());
 
         assertThat(players.get(0).winningsPile, containsInAnyOrder(new Card(10), new Card(5)));
-        assertThat(players.get(1).winningsPile.size(), is(equalTo(0)));
+        assertThat(players.get(1).winnings(), is(equalTo(0)));
     }
 
     @Test
@@ -62,10 +64,10 @@ public class WarTest {
         players.add(buildPlayer(10,3));
 
         War war = new War();
-        war.war(players, new ArrayList<>());
+        war.playCards(players, new ArrayList<>());
 
         assertThat(players.get(0).winningsPile, containsInAnyOrder(new Card(10), new Card(10), new Card(4), new Card(3)));
-        assertThat(players.get(1).winningsPile.size(), is(equalTo(0)));
+        assertThat(players.get(1).winnings(), is(equalTo(0)));
     }
 
     @Test
@@ -75,11 +77,11 @@ public class WarTest {
         players.add(buildPlayer(10));
 
         War war = new War();
-        war.war(players, new ArrayList<>());
+        war.playCards(players, new ArrayList<>());
 
-        assertThat(players.get(0).winningsPile.size(), is(equalTo(3)));
+        assertThat(players.get(0).winnings(), is(equalTo(3)));
         assertThat(players.get(0).winningsPile, containsInAnyOrder(new Card(10), new Card(10), new Card(5)));
-        assertThat(players.get(1).winningsPile.size(), is(equalTo(0)));
+        assertThat(players.get(1).winnings(), is(equalTo(0)));
     }
 
     @Test
@@ -91,6 +93,24 @@ public class WarTest {
         War war = new War();
         List<Player> winners = war.findWinners(players);
         assertThat(winners.size(), is(equalTo(1)));
+        assertThat(winners.get(0), is(sameInstance(players.get(0))));
+    }
+
+    @Test
+    public void shouldPlayAGameOfWar(){
+        War war = new War();
+
+        Random fixedRandomizer = new Random(101L);
+        DeckImpl deck = new DeckImpl(fixedRandomizer);
+
+        deck.create(2, 5);
+
+        List<Player> players = war.dealDeckAndPlayHands(2, deck);
+        assertThat(players.get(0).winnings(), is(equalTo(2)));
+        assertThat(players.get(1).winnings(), is(equalTo(8)));
+        List<Player> winners = war.findWinners(players);
+        assertThat(winners.size(), is(equalTo(1)));
+        assertThat(winners.get(0), is(sameInstance(players.get(1))));
     }
 
     Player buildPlayer(Integer ... ranks) {

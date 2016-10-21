@@ -1,5 +1,6 @@
 package com.sanecki.war;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.sanecki.war.sets.Card;
 
 import java.util.ArrayList;
@@ -10,25 +11,31 @@ import java.util.List;
  */
 public class Player implements Comparable<Player> {
 
-    int id = 0;
+    private int id = 0;
+    private List<Card> hand = new ArrayList<>();
+
+    @VisibleForTesting
     List<Card> winningsPile = new ArrayList<>();
-    List<Card> hand = new ArrayList<>();
 
     public Player(int id, List<Card> cards) {
         this(cards);
-        this.id = id;
+        this.id = id + 1;
     }
 
     public Player(List<Card> cards) {
         this.hand = cards;
     }
 
+    /**
+     * Check to see if the Player's hand is empty
+     * @return True if player's hand is empty
+     */
     public boolean hasEmptyHand() {
         return hand.isEmpty();
     }
 
     /**
-     * Add Cards to Player's win Pile
+     * Add Cards to Player's win pile
      * @param pile
      */
     public void winPile(List<Card> pile) {
@@ -60,5 +67,10 @@ public class Player implements Comparable<Player> {
      */
     public int winnings() {
         return winningsPile.size();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.id == ((Player)obj).id;
     }
 }

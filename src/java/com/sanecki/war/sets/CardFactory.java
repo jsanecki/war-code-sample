@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Jeremy on 10/19/2016.
+ * Card Factory which builds lists of <code>Card</code> objects
+ * @see com.sanecki.war.sets.Card
  */
 public class CardFactory {
 

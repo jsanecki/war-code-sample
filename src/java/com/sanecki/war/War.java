@@ -54,7 +54,7 @@ public class War {
         return numberOfPlayers > 1 && cards / numberOfPlayers >= 2;
     }
 
-    List<List<Card>> constructHands(Deck deck, int numberOfPlayers) {
+    List<List<Card>> constructPlayerHands(Deck deck, int numberOfPlayers) {
        Preconditions.checkNotNull(deck, "Deck must not be null");
 
        List<List<Card>> hands = new ArrayList<>();
@@ -79,7 +79,7 @@ public class War {
      * @param players
      * @param pile
      */
-    void war(List<Player> players, List<Card> pile) {
+    void playCards(List<Player> players, List<Card> pile) {
         if(null == pile) {
             pile = new ArrayList<>();
         }
@@ -105,8 +105,8 @@ public class War {
                 }
             }
         }
-        // highest cards go to war, again...
-        war(topPlayers, pile);
+        // highest cards go to playCards, again...
+        playCards(topPlayers, pile);
     }
 
     /**
@@ -117,10 +117,10 @@ public class War {
      * @param deck
      * @return Players that played
      */
-    List<Player> warWithDeck(int numberOfPlayers, Deck deck) {
+    List<Player> dealDeckAndPlayHands(int numberOfPlayers, Deck deck) {
         Preconditions.checkNotNull(deck, "Deck must not be null");
 
-        List<List<Card>> hands = constructHands(deck, numberOfPlayers);
+        List<List<Card>> hands = constructPlayerHands(deck, numberOfPlayers);
 
         List<Player> players = new ArrayList<>();
 
@@ -132,7 +132,7 @@ public class War {
         while(!anyEmptyHands) {
             List<Card> pile = new ArrayList<>();
 
-            war(players, pile);
+            playCards(players, pile);
 
             // ends with any players whom hands are empty
             for(Player p: players) {
@@ -143,12 +143,18 @@ public class War {
         return players;
     }
 
+    /**
+     * Finds winners out of the list of <code>Players</code>
+     * @param players
+     * @return List of players that are the winners
+     */
     List<Player> findWinners(List<Player> players) {
         List<Player> winners = new ArrayList<>();
-        Collections.sort(players, Collections.reverseOrder());
+        List<Player> sortedPlayers = new ArrayList<>(players);
+        Collections.sort(sortedPlayers, Collections.reverseOrder());
 
         int highestCount = 0;
-        for(Player p: players) {
+        for(Player p: sortedPlayers) {
             if(p.winnings() >= highestCount) {
                 highestCount = p.winnings();
                 winners.add(p);
@@ -176,7 +182,7 @@ public class War {
         deck.create(numberOfSuits, numberOfRanks);
         deck.shuffle();
 
-        List<Player> players = warWithDeck(numberOfPlayers, deck);
+        List<Player> players = dealDeckAndPlayHands(numberOfPlayers, deck);
         List<Player> winners = findWinners(players);
         System.out.println("Winners are...");
         System.out.println(winners);

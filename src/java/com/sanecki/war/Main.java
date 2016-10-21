@@ -1,9 +1,7 @@
 package com.sanecki.war;
 
-import java.util.Scanner;
-
 /**
- * Main Game Loop
+ * War Application Main
  */
 public class Main {
 

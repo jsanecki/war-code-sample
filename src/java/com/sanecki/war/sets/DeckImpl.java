@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Concert Class for Deck
+ * Concrete Class for Deck
+ *
+ * @see Deck
  */
 public class DeckImpl implements Deck {
 
@@ -20,10 +22,13 @@ public class DeckImpl implements Deck {
 
     /**
      * Constructor for Controlled Seed Randomizer
+     *
+     * *Sigh* If I wasn't so tried I wouldn't do it this way...
+     * because this is what factories are for.
      * @param random
      */
     @VisibleForTesting
-    DeckImpl(Random random) {
+    public DeckImpl(Random random) {
         this.cards = new ArrayList<>();
         this.cardFactory = new CardFactory();
         this.randomizer = random;
