@@ -36,10 +36,7 @@ public class DeckImpl implements Deck {
 
     @Override
     public void create(int numberOfSuits, int numberOfRanks) {
-        for(int s = 0; s < numberOfSuits; s++) {
-            List<Card> aSuitOfCards = cardFactory.assembleCardsForASuit(numberOfRanks);
-            cards.addAll(aSuitOfCards);
-        }
+        this.cards = cardFactory.assembleCardsForADeck(numberOfSuits, numberOfRanks);
     }
 
     @Override

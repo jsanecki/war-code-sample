@@ -17,4 +17,13 @@ public class CardFactory {
 
         return cards;
     }
+
+    public List<Card> assembleCardsForADeck(int numberOfSuits, int numberOfRanks) {
+        List<Card> cards = new ArrayList<Card>();
+        for(int s = 0; s < numberOfSuits; s++) {
+            List<Card> aSuitOfCards = this.assembleCardsForASuit(numberOfRanks);
+            cards.addAll(aSuitOfCards);
+        }
+        return cards;
+    }
 }
