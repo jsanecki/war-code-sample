@@ -3,8 +3,27 @@ version '1.0'
 
 apply plugin: 'groovy'
 apply plugin: 'java'
+apply plugin: 'application'
 
 sourceCompatibility = 1.8
+
+mainClassName = "com.sanecki.war.Main"
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/java']
+        }
+        resources {
+            srcDirs = ['src/resources']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['test/java']
+        }
+    }
+}
 
 repositories {
     mavenCentral()
@@ -17,4 +36,19 @@ dependencies {
 
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+task printClasspath {
+    doLast {
+        configurations.testRuntime.each { println it }
+    }
+}
+
+task uberjar(type: Jar,dependsOn:[':compileJava']) {
+    from files(sourceSets.main.output.classesDir)
+    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
 }
